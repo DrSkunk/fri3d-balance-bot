@@ -29,6 +29,8 @@
 #define HG7881_B_IB 32 // D11 --> Motor B Input B --> MOTOR B -
  
 // functional connections
+#define MOTOR_A_PWM 27 // Motor B PWM Speed
+#define MOTOR_A_DIR 26 // Motor B Direction
 #define MOTOR_B_PWM HG7881_B_IA // Motor B PWM Speed
 #define MOTOR_B_DIR HG7881_B_IB // Motor B Direction
 #define MOTOR_B_CHANNEL 2
@@ -43,10 +45,13 @@ void setup()
   Serial.begin( 9600 );
   
   ledcAttachPin(MOTOR_B_PWM, MOTOR_B_CHANNEL);
-  ledcSetup(MOTOR_B_CHANNEL, 1200, 8);
+  ledcAttachPin(MOTOR_A_PWM, MOTOR_B_CHANNEL);
+  ledcSetup(MOTOR_B_CHANNEL, 1000, 8);
   pinMode( MOTOR_B_DIR, OUTPUT );
+  pinMode( MOTOR_A_DIR, OUTPUT );
   //pinMode( MOTOR_B_PWM, OUTPUT );
   digitalWrite( MOTOR_B_DIR, LOW );
+  digitalWrite( MOTOR_A_DIR, LOW );
   ledcWrite( MOTOR_B_CHANNEL, 0 );
 
 }
@@ -78,11 +83,13 @@ void loop()
       case '1': // 1) Fast forward
         Serial.println( "Fast forward..." );
         // always stop motors briefly before abrupt changes
-        digitalWrite( MOTOR_B_DIR, LOW );
+        /*digitalWrite( MOTOR_B_DIR, LOW );
+        digitalWrite( MOTOR_A_DIR, LOW );
         ledcWrite( MOTOR_B_CHANNEL, 0 );
-        delay( DIR_DELAY );
+        delay( DIR_DELAY );*/
         // set the motor speed and direction
         digitalWrite( MOTOR_B_DIR, HIGH ); // direction = forward
+        digitalWrite( MOTOR_A_DIR, HIGH );
         ledcWrite( MOTOR_B_CHANNEL, 255-PWM_FAST ); // PWM speed = fast
         isValidInput = true;
         break;      
@@ -90,11 +97,13 @@ void loop()
       case '2': // 2) Forward      
         Serial.println( "Forward..." );
         // always stop motors briefly before abrupt changes
-        digitalWrite( MOTOR_B_DIR, LOW );
+        /*digitalWrite( MOTOR_B_DIR, LOW );
+        digitalWrite( MOTOR_A_DIR, LOW );
         ledcWrite( MOTOR_B_CHANNEL, 0 );
-        delay( DIR_DELAY );
+        delay( DIR_DELAY );*/
         // set the motor speed and direction
         digitalWrite( MOTOR_B_DIR, HIGH ); // direction = forward
+        digitalWrite( MOTOR_A_DIR, HIGH );
         ledcWrite( MOTOR_B_CHANNEL, 255-PWM_SLOW ); // PWM speed = slow
         isValidInput = true;
         break;      
@@ -102,6 +111,7 @@ void loop()
       case '3': // 3) Soft stop (preferred)
         Serial.println( "Soft stop (coast)..." );
         digitalWrite( MOTOR_B_DIR, LOW );
+        digitalWrite( MOTOR_A_DIR, LOW );
         ledcWrite( MOTOR_B_CHANNEL, 0 );
         isValidInput = true;
         break;      
@@ -109,11 +119,13 @@ void loop()
       case '4': // 4) Reverse
         Serial.println( "Reverse..." );
         // always stop motors briefly before abrupt changes
-        digitalWrite( MOTOR_B_DIR, LOW );
+        /*digitalWrite( MOTOR_B_DIR, LOW );
+        digitalWrite( MOTOR_A_DIR, LOW );
         ledcWrite( MOTOR_B_CHANNEL, 0 );
-        delay( DIR_DELAY );
+        delay( DIR_DELAY );*/
         // set the motor speed and direction
         digitalWrite( MOTOR_B_DIR, LOW ); // direction = reverse
+        digitalWrite( MOTOR_A_DIR, LOW );
         ledcWrite( MOTOR_B_CHANNEL, PWM_SLOW ); // PWM speed = slow
         isValidInput = true;
         break;      
@@ -121,11 +133,13 @@ void loop()
       case '5': // 5) Fast reverse
         Serial.println( "Fast reverse..." );
         // always stop motors briefly before abrupt changes
-        digitalWrite( MOTOR_B_DIR, LOW );
+        /*digitalWrite( MOTOR_B_DIR, LOW );
+        digitalWrite( MOTOR_A_DIR, LOW );
         ledcWrite( MOTOR_B_CHANNEL, 0 );
-        delay( DIR_DELAY );
+        delay( DIR_DELAY );*/
         // set the motor speed and direction
         digitalWrite( MOTOR_B_DIR, LOW ); // direction = reverse      
+        digitalWrite( MOTOR_A_DIR, LOW );
         ledcWrite( MOTOR_B_CHANNEL, PWM_FAST ); // PWM speed = fast
         isValidInput = true;
         break;
@@ -133,6 +147,7 @@ void loop()
       case '6': // 6) Hard stop (use with caution)
         Serial.println( "Hard stop (brake)..." );
         digitalWrite( MOTOR_B_DIR, LOW );
+        digitalWrite( MOTOR_A_DIR, LOW );
         //ledcWrite( MOTOR_B_CHANNEL, 0 );
         ledcWrite( MOTOR_B_CHANNEL, 0 );
         isValidInput = true;

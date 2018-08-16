@@ -77,8 +77,8 @@ void setup()
     // Setup PWM devices
     ledcAttachPin(ENA, ENACHANNEL);
     ledcAttachPin(ENB, ENBCHANNEL);
-    ledcSetup(ENACHANNEL, 12000, 8);
-    ledcSetup(ENBCHANNEL, 12000, 8);
+    ledcSetup(ENACHANNEL, 1200, 8);
+    ledcSetup(ENBCHANNEL, 1200, 8);
 
     // initialize device
     Serial.println(F("Initializing I2C devices..."));
@@ -94,10 +94,10 @@ void setup()
     Serial.println(F("Initializing DMP done..."));
 
     // supply your own gyro offsets here, scaled for min sensitivity
-    mpu.setXGyroOffset(220);
-    mpu.setYGyroOffset(76);
-    mpu.setZGyroOffset(-85);
-    mpu.setZAccelOffset(1788); // 1688 factory default for my test chip
+    //mpu.setXGyroOffset(220);
+    //mpu.setYGyroOffset(76);
+    //mpu.setZGyroOffset(-85);
+    //mpu.setZAccelOffset(1788); // 1688 factory default for my test chip
 
     // make sure it worked (returns 0 if so)
     if (devStatus == 0)
@@ -139,12 +139,12 @@ void setup()
 
 void loop()
 {
-    /*Serial.print("ypr\t");
+    Serial.print("ypr\t");
     Serial.print(ypr[0] * 180/M_PI);
     Serial.print("\t");
     Serial.print(ypr[1] * 180/M_PI);
     Serial.print("\t");
-    Serial.println(ypr[2] * 180/M_PI);*/
+    Serial.println(ypr[2] * 180/M_PI);
     // if programming failed, don't try to do anything
     if (!dmpReady) return;
 
@@ -152,9 +152,14 @@ void loop()
     // while (!mpuInterrupt && fifoCount < packetSize)
     while (fifoCount < packetSize)
     {
+      fifoCount = mpu.getFIFOCount();
+      Serial.print("FIFOCount ");
+      Serial.println(fifoCount);
         //no mpu data - performing PID calculations and output to motors
         
         pid.Compute();
+        //Serial.print("Output ");
+        //Serial.println(output);
         motorController.move(output, MIN_ABS_SPEED);
         
     }
@@ -164,7 +169,7 @@ void loop()
     // mpuIntStatus = mpu.getIntStatus();
 
     // get current FIFO count
-    fifoCount = mpu.getFIFOCount();
+    
 
     // check for overflow (this should never happen unless our code is too inefficient)
     // if ((mpuIntStatus & 0x10) || fifoCount == 1024)

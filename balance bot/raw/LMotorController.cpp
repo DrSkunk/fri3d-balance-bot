@@ -18,7 +18,7 @@ LMotorController::LMotorController(int ena, int in1, int enb, int in3, double mo
 	pinMode(_in3, OUTPUT);
 }
 
-/*
+
 void LMotorController::move(int leftSpeed, int rightSpeed, int minAbsSpeed)
 {
     if (rightSpeed < 0)
@@ -56,7 +56,7 @@ void LMotorController::move(int leftSpeed, int rightSpeed, int minAbsSpeed)
     ledcWrite(_ena, realRightSpeed * _motorAConst);
     ledcWrite(_enb, realLeftSpeed * _motorBConst);
 }
-*/
+
 
 void LMotorController::move(int speed, int minAbsSpeed)
 {
@@ -79,21 +79,19 @@ void LMotorController::move(int speed, int minAbsSpeed)
     
     int realSpeed = max(minAbsSpeed, abs(speed));
     
-    //digitalWrite(_in1, speed > 0 ? HIGH : LOW);
-    digitalWrite(_in1, LOW);
+    digitalWrite(_in1, speed > 0 ? HIGH : LOW);
     // digitalWrite(_in2, speed > 0 ? LOW : HIGH);
-    //digitalWrite(_in3, speed > 0 ? HIGH : LOW);
-    digitalWrite(_in3, LOW);
+    digitalWrite(_in3, speed > 0 ? HIGH : LOW);
     // digitalWrite(_in4, speed > 0 ? LOW : HIGH);
     // analogWrite(_ena, realSpeed * _motorAConst);
     // analogWrite(_enb, realSpeed * _motorBConst);
-    ledcWrite(_ena, realSpeed);// * _motorAConst);
-    ledcWrite(_enb, realSpeed);// * _motorBConst);
+    ledcWrite(_ena, realSpeed * _motorAConst);
+    ledcWrite(_enb, realSpeed * _motorBConst);
 
     _currentSpeed = direction * realSpeed;
 }
 
-/*
+
 void LMotorController::move(int speed)
 {
     if (speed == _currentSpeed) return;
@@ -157,7 +155,7 @@ void LMotorController::turnRight(int speed, bool kick)
     // analogWrite(_enb, speed * _motorBConst);
     ledcWrite(_ena, speed * _motorAConst);
     ledcWrite(_enb, speed * _motorBConst);
-}*/
+}
 
 
 /*void LMotorController::stopMoving()

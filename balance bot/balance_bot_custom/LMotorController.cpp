@@ -79,16 +79,17 @@ void LMotorController::move(int speed, int minAbsSpeed)
     
     int realSpeed = max(minAbsSpeed, abs(speed));
     
-    //digitalWrite(_in1, speed > 0 ? HIGH : LOW);
-    digitalWrite(_in1, LOW);
+    digitalWrite(_in1, speed > 0 ? HIGH : LOW);
+    //digitalWrite(_in1, LOW);
     // digitalWrite(_in2, speed > 0 ? LOW : HIGH);
-    //digitalWrite(_in3, speed > 0 ? HIGH : LOW);
-    digitalWrite(_in3, LOW);
+    digitalWrite(_in3, speed > 0 ? HIGH : LOW);
+    //digitalWrite(_in3, LOW);
+    
     // digitalWrite(_in4, speed > 0 ? LOW : HIGH);
     // analogWrite(_ena, realSpeed * _motorAConst);
     // analogWrite(_enb, realSpeed * _motorBConst);
-    ledcWrite(_ena, realSpeed);// * _motorAConst);
-    ledcWrite(_enb, realSpeed);// * _motorBConst);
+    ledcWrite(_ena, speed > 0 ? 255 - realSpeed : realSpeed);// * _motorAConst);
+    ledcWrite(_enb, speed > 0 ? 255 - realSpeed : realSpeed);// * _motorBConst);
 
     _currentSpeed = direction * realSpeed;
 }
