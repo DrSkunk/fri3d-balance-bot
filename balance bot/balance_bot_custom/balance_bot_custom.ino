@@ -125,6 +125,7 @@ void loop()
   total = total - readings[readIndex];
   // read from the sensor:
   readings[readIndex] = -(atan2(ax, sqrt(ay*ay + az*az))*180.0)/M_PI;
+  Serial.println(-(atan2(ax, sqrt(ay*ay + az*az))*180.0)/M_PI);
   // add the reading to the total:
   total = total + readings[readIndex];
   // advance to the next position in the array:
@@ -138,7 +139,7 @@ void loop()
 
   // calculate the average:
   // average = total / numReadings;
-  input = total / numReadings;
+  input = -(atan2(ax, sqrt(ay*ay + az*az))*180.0)/M_PI;//total / numReadings;
   // send it to the computer as ASCII digits
   Serial.println(average);
   delay(1);        // delay in between reads for stability
@@ -147,9 +148,9 @@ void loop()
   //Serial.print("Input ");
   //Serial.println(input);
   pid.Compute();
-  //Serial.print("Output ");
-  //Serial.println(output);
-  motorController.move(output, MIN_ABS_SPEED);
+  Serial.print("Output ");
+  Serial.println(output);
+  //motorController.move(output, MIN_ABS_SPEED);
 }
 
 
